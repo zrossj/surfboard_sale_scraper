@@ -1,0 +1,59 @@
+FROM python:3.11-alpine
+
+ENV DISPLAY=:99
+WORKDIR /app
+COPY . /app
+
+# copy the cron file to the right folder; 
+COPY cron_job /etc/crontabs/root
+
+
+RUN touch /var/log/cron.log
+
+
+RUN apk update && \
+    apk add \
+    gcc \
+    g++ \
+    musl-dev \
+    libffi-dev \
+    make \
+    libc++ \
+    libc++-dev \
+    && apk add --virtual .build-deps gcc g++ make musl-dev
+
+
+RUN apk update && \
+    apk add \
+    firefox \
+    dbus \
+    ttf-freefont \
+    xorg-server \
+    xf86-video-vesa \
+    bash \
+    curl \
+    unzip \
+    xvfb-run \
+    su-exec \
+    libjpeg \
+    libpng
+
+    
+# Install crond and other needed tools
+RUN apk add --no-cache bash curl busybox-suid && \
+    chmod u+s /bin/busybox
+
+
+# geckodriver installation for selenium;
+RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.36.0/geckodriver-v0.36.0-linux64.tar.gz
+RUN tar -xzf geckodriver-v0.36.0-linux64.tar.gz 
+RUN mv geckodriver /usr/local/bin/geckodriver
+RUN chmod +x /usr/local/bin/geckodriver
+
+
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
+
+
+RUN chmod +x shebang.sh
+CMD ["./shebang.sh"]

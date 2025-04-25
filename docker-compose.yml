@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+
+  python:
+    build:
+      context: ./dockerpy
+      dockerfile: dockerfile
+
+    ports:
+      - "5000:5000"
+      
+    image: py_board_scraper
+    container_name: py_board_scraper
