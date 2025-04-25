@@ -8,6 +8,10 @@ import datetime as dt
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from jproperties import Properties
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 
 
 time_start = dt.datetime.now()
@@ -98,13 +102,10 @@ for candidate in boards_list_filtered:
             pics.append(f"<img src={child.get('data-lazy-src')}>")
     
     candidate['img_source'] = pics
-    print(f'found {len(boards_list_filtered)} boards')
 
+
+print(f'found {len(boards_list_filtered)} boards')
     
-
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 
 html_msg = ""
